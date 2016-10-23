@@ -1,5 +1,6 @@
 {
     "train_advice_line_single": "De eerst volgende trein naar __destination__ vertrekt om __departuretime__ vanaf spoor __departuretrack__ aankomst om __arrivaltime__ op spoor __arrivaltrack__",
     "train_advice_line_multiple": "De volgende trein naar __destination__ vertrekt om __departuretime__ vanaf spoor __departuretrack__ aankomst om __arrivaltime__ op spoor __arrivaltrack__",
-    "question_report_all_advices": "Er zijn meerdere ritten gevonden. Zal ik ze allemaal voorlezen?"
+    "question_report_all_advices": "Er zijn meerdere ritten gevonden. Zal ik ze allemaal voorlezen?",
+    "maintenance_report": "__message__"
 }

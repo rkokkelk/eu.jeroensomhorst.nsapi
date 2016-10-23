@@ -10,8 +10,6 @@ const endpoint_traveladvice = "/ns-api-treinplanner";
 const endpoint_disruptions = "/ns-api-storingen";
 const endpoint_schedule = "/ns-api-avt";
 
-
-
 var method = NsApi.prototype;
 
 function NsApi(username,password){
@@ -49,7 +47,6 @@ method.generateOptions = function(hostname,defaultpath, params,username,password
             options.path = options.path.concat(params[i]);
         }
     }
-    Homey.log(JSON.stringify(options));
     return options;
 }
 
@@ -80,24 +77,21 @@ method.getSchedule = function(params,successcb,errorcb){
 }
 
 method.getDisruptionsList = function(params,successcb,errorcb){
-    //?station=${Stationsnaam}&actual=${true
     var parameters = [];
-    if(params.hasOwnProperty('station')){
-        parameters.push('station');
-        parameters.push(encodeURIComponent(params.station.childNamed('Namen').childNamed('Lang').val));
-    }
-    if(params.hasOwnProperty('actual')){
-        parameters.push('actual');
-        parameters.push(params.actual);
-    }
-
-    if(params.hasOwnProperty('unplanned')){
-        parameters.push('unplanned');
-        parameters.push(unplanned);
-    }
-
-    var options = this.generateOptions(hostname,endpoint_disruptions,this.username,this.password);
-
+    parameters.push("actual");
+    parameters.push("true");
+    
+    var options = this.generateOptions(hostname,endpoint_disruptions,parameters,this.username,this.password);
+    https.get(options,function(res){
+        var body = '';
+        res.on('data',function(chunk){
+            body += chunk;	
+        }).on('end',function(){
+            successcb(new XmlDocument(body));
+        });
+    }).on('error',function(data){
+       errorcb(data);
+    });
 }
 
 

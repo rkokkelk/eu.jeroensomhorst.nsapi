@@ -1,22 +1,27 @@
 {
     "id": "eu.jeroensomhorst.nsapi",
     "name": {
-        "en": "NS Public Transport info"
+        "en": "NS Public Transport info",
+        "nl": "Nederlandse Spoorwegen app"
     },
-    "version": "0.0.1",
+    "description":{
+        "nl": "Geef Homey de mogelijkheid om de NS dienstregeling te bekijken",
+        "en": "Give Homey the power to use the Dutch Railway schedule info"
+    },
+    "images":{
+        "large" : "./assets/images/large.jpg",
+        "small" : "./assets/images/small.jpg"
+    },
+    "version": "0.1.0",
     "compatibility": "0.x || 1.x",
     "author": {
         "name": "Jeroen Somhorst",
         "email": "j.somhorst@gmail.com"
     },
-    "speech":[{
-        "id": "trigger_train",
-        "importance": 1,
-        "triggers":{
-            "nl": ["met de trein","trein","treinreis"],
-            "en": ["with the train","train","trainjourney"]
-        }
-    }],
+    "category":["internet"],
+    "dependencies": {
+        "request": "*"
+    },
     "flow":{
     "actions":[{
             "id": "get_travel_advice",
@@ -27,15 +32,51 @@
             "args":[
                 {
                     "name": "from",
-                    "type": "autocomplete"
+                    "type": "autocomplete",
+                    "placeholder": {
+                        "en": "Departure",
+                        "nl": "Vertrekpunt"
+                    }
                  },
                  {
                     "name": "to",
-                    "type": "autocomplete"
+                    "type": "autocomplete",
+                    "placeholder": {
+                        "en": "Destination",
+                        "nl": "Aankomst in"
+                    }
                  }
             ]
-        }]
+        },
+        {
+            "id": "get_travel_advice_single",
+            "title":{
+                "nl": "Eerst volgende trein naar",
+                "en": "Upcoming train to.."
+            },
+            "args":[
+                {
+                    "name": "from",
+                    "type": "autocomplete",
+                    "placeholder": {
+                        "en": "Departure",
+                        "nl": "Vertrekpunt"
+                    }
+                 },
+                 {
+                    "name": "to",
+                    "type": "autocomplete",
+                    "placeholder": {
+                        "en": "Destination",
+                        "nl": "Aankomst in"
+                    }
+                 }
+            ]
+        }],
+    "triggers":[],
+    "conditions": []
     },
+   
     "permissions": [
         "homey:manager:speech-output",
         "homey:manager:speech-input"

@@ -8,15 +8,16 @@ var advicesFound = [];
 var index = 0;
 module.exports.init = function init(api){
     nsApi = api;
-    //Homey.manager('flow').on('trigger.advise',giveAdise.bind(null,false));
-    
+
     Homey.manager('flow').on('action.get_travel_advice.from.autocomplete',autoCompleteHandler);
-
     Homey.manager('flow').on('action.get_travel_advice.to.autocomplete',autoCompleteHandler);
-
-    Homey.manager('flow').on('action.get_travel_advice',onGetTravelAdviceHandler);
+    Homey.manager('flow').on('action.get_travel_advice',onGetTravelAdviceHandlerMulti);
+    Homey.manager('flow').on('action.get_travel_advice_single',onGetTravelAdviceSingleHandler);
+    Homey.manager('flow').on('action.get_travel_advice_single.from.autocomplete',autoCompleteHandler);
+    Homey.manager('flow').on('action.get_travel_advice_single.to.autocomplete',autoCompleteHandler);
     
 }
+
 
 function reportRouteAdvice(list,departure,arrival){
     
@@ -37,6 +38,7 @@ function reportRouteAdvice(list,departure,arrival){
     });
 
     if(advicesParsed.length > 1){
+        Homey.log("Found multiple advices. Ask user to read them all");
         speechInput.confirm(__("question_report_all_advices"),function(err, reportall){
            if(!reportall){
                 advicesFound = advicesParsed.slice(0,1);
@@ -47,6 +49,10 @@ function reportRouteAdvice(list,departure,arrival){
             reportRouteAdviceEntry(null,true);
             
         });
+    }else{
+        Homey.log("Found single advice. Read it");
+        advicesFound = advicesParsed;
+        reportRouteAdviceEntry(null,true);
     }
 }
 
@@ -66,10 +72,7 @@ function reportRouteAdviceEntry(err,success){
 
 }
 
-
-function onGetTravelAdviceHandler(callback, args){
-    Homey.log('Arguments');
-    
+function onGetTravelAdviceSingleHandler(callback,args){
     if(!args.hasOwnProperty('to')){
         callback(null,false);
     }else
@@ -77,8 +80,35 @@ function onGetTravelAdviceHandler(callback, args){
         callback(null,false);
     }else{
         var params = {};
-        params.start = nsApi.getStationByCode(args.to.code);
-        params.end = nsApi.getStationByCode(args.from.code);
+        params.start = nsApi.getStationByCode(args.from.code);
+        params.end = nsApi.getStationByCode(args.to.code);
+        if(params.start == null || params.end == null){
+            callback(null,false);
+        }
+        nsApi.getRouteAdvice(params,function(data){
+            reportRouteAdvice(data.slice(1),params.start,params.end);
+            callback(null,true);
+        },function(data){
+            callback(null,false);
+        })
+        
+    }
+}
+
+
+function onGetTravelAdviceHandlerMulti(callback, args){
+    Homey.log('Arguments');
+    Homey.log(JSON.stringify(args));
+   
+    if(!args.hasOwnProperty('to')){
+        callback(null,false);
+    }else
+    if(!args.hasOwnProperty('from')){
+        callback(null,false);
+    }else{
+        var params = {};
+        params.start = nsApi.getStationByCode(args.from.code);
+        params.end = nsApi.getStationByCode(args.to.code);
         if(params.start == null || params.end == null){
             callback(null,false);
         }
