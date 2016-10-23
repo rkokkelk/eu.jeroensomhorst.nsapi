@@ -6,15 +6,19 @@ This is an little application that enables Homey (from Athom) to give you travel
 
 none yet
 
-## flow cards (Then column)
+## Triggers ( When column)
+
+none yet
+
+## Conditions ( AND Column)
+
+none yet 
+
+## Action cards (Then column)
 
  1. Single travel advice for a specified track. 
  
  2. Let homey find travel advice for a specified track and ask you if you want to let it report all or just one possibility
-
-## Triggers ( AND Column)
-
-none yet 
 
 ## Changelog
 
