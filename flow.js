@@ -73,6 +73,8 @@ function reportRouteAdviceEntry(err,success){
 }
 
 function onGetTravelAdviceSingleHandler(callback,args){
+    advicesFound = [];
+    index = 0;
     if(!args.hasOwnProperty('to')){
         callback(null,false);
     }else
@@ -99,7 +101,8 @@ function onGetTravelAdviceSingleHandler(callback,args){
 function onGetTravelAdviceHandlerMulti(callback, args){
     Homey.log('Arguments');
     Homey.log(JSON.stringify(args));
-   
+   advicesFound = [];
+   index = 0;
     if(!args.hasOwnProperty('to')){
         callback(null,false);
     }else

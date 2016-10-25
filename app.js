@@ -5,6 +5,7 @@ const nsApi = require('./nsapi');
 var api = new nsApi(Homey.env.NSAPI_USERNAME,Homey.env.NSAPI_PASSWORD);
 
 
+
 const speechProcessor = require('./speech.js');
 const flowProcessor = require('./flow.js');
 
