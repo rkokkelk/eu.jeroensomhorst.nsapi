@@ -22,9 +22,6 @@ none yet
 
 ## Changelog
 
-0.1.2
-* Localization category added
-
 0.1.1
 * Bugfix release. Fixed a bug that would cause Homey to only tell you the info once. After that you had to reboot Homey.
 
