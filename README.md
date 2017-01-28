@@ -22,6 +22,12 @@ none yet
 
 ## Changelog
 
+0.1.3
+* Added option to specify the 'via' station name
+
+0.1.2 
+* Added localization
+
 0.1.1
 * Bugfix release. Fixed a bug that would cause Homey to only tell you the info once. After that you had to reboot Homey.
 

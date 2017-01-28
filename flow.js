@@ -11,15 +11,23 @@ module.exports.init = function init(api){
 
     Homey.manager('flow').on('action.get_travel_advice.from.autocomplete',autoCompleteHandler);
     Homey.manager('flow').on('action.get_travel_advice.to.autocomplete',autoCompleteHandler);
+    Homey.manager('flow').on('action.get_travel_advice.via.autocomplete',autoCompleteHandler);
     Homey.manager('flow').on('action.get_travel_advice',onGetTravelAdviceHandlerMulti);
     Homey.manager('flow').on('action.get_travel_advice_single',onGetTravelAdviceSingleHandler);
     Homey.manager('flow').on('action.get_travel_advice_single.from.autocomplete',autoCompleteHandler);
     Homey.manager('flow').on('action.get_travel_advice_single.to.autocomplete',autoCompleteHandler);
-    
+    Homey.manager('flow').on('action.get_travel_advice_single.via.autocomplete',autoCompleteHandler);
+    Homey.manager('flow').on('action.get_departure_times.from.autocomplete',autoCompleteHandler);
+    Homey.manager('flow').on('action.get_departure_times',onGetDepartureTimes);
+}
+
+function onGetDepartureTimes(callback, args){
+    Homey.log('On Get departure times called!');
+
 }
 
 
-function reportRouteAdvice(list,departure,arrival){
+function reportRouteAdvice(list,departure,arrival,via){
     
     var advicesParsed = [];
 
@@ -69,6 +77,7 @@ function reportRouteAdviceEntry(err,success){
     Homey.log(JSON.stringify(adviceEntry));
     index++;
     speechOutput.say(__(label,adviceEntry),reportRouteAdviceEntry);
+    
 
 }
 
@@ -87,6 +96,11 @@ function onGetTravelAdviceSingleHandler(callback,args){
         if(params.start == null || params.end == null){
             callback(null,false);
         }
+
+        if(args.hasOwnProperty('via')){
+            params.via = nsApi.getStationByCode(args.via.code);
+        }
+
         nsApi.getRouteAdvice(params,function(data){
             reportRouteAdvice(data.slice(1),params.start,params.end);
             callback(null,true);
@@ -112,11 +126,16 @@ function onGetTravelAdviceHandlerMulti(callback, args){
         var params = {};
         params.start = nsApi.getStationByCode(args.from.code);
         params.end = nsApi.getStationByCode(args.to.code);
+        if(args.hasOwnProperty('via')){
+            params.via = nsApi.getStationByCode(args.via.code);
+        }
+        
         if(params.start == null || params.end == null){
             callback(null,false);
         }
+        
         nsApi.getRouteAdvice(params,function(data){
-            reportRouteAdvice(data,params.start,params.end);
+            reportRouteAdvice(data,params.start,params.end,params.via);
             callback(null,true);
         },function(data){
             callback(null,false);
