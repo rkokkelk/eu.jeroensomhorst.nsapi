@@ -23,11 +23,12 @@
         "request": "*"
     },
     "flow":{
-    "actions":[{
-            "id": "get_travel_advice",
+    "actions":[
+        {
+            "id": "get_travel_advice_via",
             "title": {
-                "en": "Get travel advice",
-                "nl": "NS Reisinformatie"
+                "en": "Get travel advice (via)",
+                "nl": "NS Reisinformatie (via)"
             },
             "args":[
                 {
@@ -52,7 +53,98 @@
                     "placeholder": {
                         "en": "Via",
                         "nl": "Via"
+                    },
+                    "required": false
+                 },
+                 {
+                     "name": "period",
+                     "type": "number",
+                     "min": 0,
+                     "max": 60,
+                     "placeholder":{
+                        "en": "Minutes in future",
+                        "nl": "Minuten na nu"
+                     }
+                 }
+            ]
+        },
+        {
+            "id": "get_travel_advice_single_via",
+            "title":{
+                "nl": "Eerst volgende trein naar (via)",
+                "en": "Upcoming train to (via)"
+            },
+            "args":[
+                {
+                    "name": "from",
+                    "type": "autocomplete",
+                    "placeholder": {
+                        "en": "Departure",
+                        "nl": "Vertrekpunt"
                     }
+                 },
+                 {
+                    "name": "to",
+                    "type": "autocomplete",
+                    "placeholder": {
+                        "en": "Destination",
+                        "nl": "Aankomst in"
+                    }
+                 },
+                 {
+                    "name": "via",
+                    "type": "autocomplete",
+                    "placeholder": {
+                        "en": "Via",
+                        "nl": "Via"
+                    },
+                    "required": false
+                 },
+                 {
+                     "name": "period",
+                     "type": "number",
+                     "min": 0,
+                     "max": 60,
+                     "placeholder":{
+                        "en": "Minutes in future",
+                        "nl": "Minuten na nu"
+                     }
+                 }
+                 
+            ]
+        },
+        {
+            "id": "get_travel_advice",
+            "title": {
+                "en": "Get travel advice",
+                "nl": "NS Reisinformatie"
+            },
+            "args":[
+                {
+                    "name": "from",
+                    "type": "autocomplete",
+                    "placeholder": {
+                        "en": "Departure",
+                        "nl": "Vertrekpunt"
+                    }
+                 },
+                 {
+                    "name": "to",
+                    "type": "autocomplete",
+                    "placeholder": {
+                        "en": "Destination",
+                        "nl": "Aankomst in"
+                    }
+                 },
+                 {
+                     "name": "period",
+                     "type": "number",
+                     "min": 0,
+                     "max": 60,
+                     "placeholder":{
+                        "en": "Minutes in future",
+                        "nl": "Minuten na nu"
+                     }
                  }
             ]
         },        
@@ -79,13 +171,15 @@
                         "nl": "Aankomst in"
                     }
                  },
-                {
-                    "name": "via",
-                    "type": "autocomplete",
-                    "placeholder": {
-                        "en": "Via",
-                        "nl": "Via"
-                    }
+                 {
+                     "name": "period",
+                     "type": "number",
+                     "min": 0,
+                     "max": 60,
+                     "placeholder":{
+                        "en": "Minutes in future",
+                        "nl": "Minuten na nu"
+                     }
                  }
                  
             ]

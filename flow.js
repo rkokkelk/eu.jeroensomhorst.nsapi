@@ -13,10 +13,22 @@ module.exports.init = function init(api){
     Homey.manager('flow').on('action.get_travel_advice.to.autocomplete',autoCompleteHandler);
     Homey.manager('flow').on('action.get_travel_advice.via.autocomplete',autoCompleteHandler);
     Homey.manager('flow').on('action.get_travel_advice',onGetTravelAdviceHandlerMulti);
+
+    Homey.manager('flow').on('action.get_travel_advice_via.from.autocomplete',autoCompleteHandler);
+    Homey.manager('flow').on('action.get_travel_advice_via.to.autocomplete',autoCompleteHandler);
+    Homey.manager('flow').on('action.get_travel_advice_via.via.autocomplete',autoCompleteHandler);
+    Homey.manager('flow').on('action.get_travel_advice_via',onGetTravelAdviceHandlerMulti);
+
     Homey.manager('flow').on('action.get_travel_advice_single',onGetTravelAdviceSingleHandler);
     Homey.manager('flow').on('action.get_travel_advice_single.from.autocomplete',autoCompleteHandler);
     Homey.manager('flow').on('action.get_travel_advice_single.to.autocomplete',autoCompleteHandler);
     Homey.manager('flow').on('action.get_travel_advice_single.via.autocomplete',autoCompleteHandler);
+
+    Homey.manager('flow').on('action.get_travel_advice_single_via',onGetTravelAdviceSingleHandler);
+    Homey.manager('flow').on('action.get_travel_advice_single_via.from.autocomplete',autoCompleteHandler);
+    Homey.manager('flow').on('action.get_travel_advice_single_via.to.autocomplete',autoCompleteHandler);
+    Homey.manager('flow').on('action.get_travel_advice_single_via.via.autocomplete',autoCompleteHandler);
+
     Homey.manager('flow').on('action.get_departure_times.from.autocomplete',autoCompleteHandler);
     Homey.manager('flow').on('action.get_departure_times',onGetDepartureTimes);
 }
@@ -84,6 +96,8 @@ function reportRouteAdviceEntry(err,success){
 function onGetTravelAdviceSingleHandler(callback,args){
     advicesFound = [];
     index = 0;
+    var departureTime= new moment();
+
     if(!args.hasOwnProperty('to')){
         callback(null,false);
     }else
@@ -99,6 +113,12 @@ function onGetTravelAdviceSingleHandler(callback,args){
 
         if(args.hasOwnProperty('via')){
             params.via = nsApi.getStationByCode(args.via.code);
+        }
+
+        if(args.hasOwnProperty('period') && args.period > 0){
+            Homey.log("Period greater then 0 specified");
+            departureTime.add(args.period,"minutes");
+            params.departureDateTime = departureTime.format();
         }
 
         nsApi.getRouteAdvice(params,function(data){
@@ -126,14 +146,19 @@ function onGetTravelAdviceHandlerMulti(callback, args){
         var params = {};
         params.start = nsApi.getStationByCode(args.from.code);
         params.end = nsApi.getStationByCode(args.to.code);
-        if(args.hasOwnProperty('via')){
-            params.via = nsApi.getStationByCode(args.via.code);
-        }
-        
         if(params.start == null || params.end == null){
             callback(null,false);
         }
         
+        if(args.hasOwnProperty('via')){
+            params.via = nsApi.getStationByCode(args.via.code);
+        }
+        
+        if(args.hasOwnProperty('period')){
+            moment.add(args.period,"minutes");
+            params.departureDateTime = moment.format();
+        }
+
         nsApi.getRouteAdvice(params,function(data){
             reportRouteAdvice(data,params.start,params.end,params.via);
             callback(null,true);

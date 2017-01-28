@@ -131,8 +131,14 @@ method.getRouteAdvice = function(params,successcb,errorcb){
         parameters.push(1);
     }
 
+    if(params.hasOwnProperty('departureDateTime')){
+        parameters.push("dateTime");
+        parameters.push(encodeURIComponent(params.departureDateTime));
+    }
+
+
     var options = this.generateOptions(hostname,endpoint_traveladvice,parameters,this.username,this.password);
-    
+    Homey.log(JSON.stringify(options));
     https.get(options,function(res){
        
         var body = '';
